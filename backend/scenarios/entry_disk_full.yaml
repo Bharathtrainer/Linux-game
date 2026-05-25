@@ -1,3 +1,23 @@
 id: entry_disk_full
 level: entry
-objective: Disk usage causing instability
+title: "Production server: disk filling fast"
+narrative: |
+  An alert just paged you. The /var partition on a production app server is
+  at 96% and climbing. The on-call engineer needs to know what's eating the
+  space before the disk fills and the application crashes. You have shell
+  access. No need to delete anything yet — first, find the offender.
+objective: "Identify which directory or file is consuming the most space under /var."
+setup_script: |
+  # Seed the sandbox with a realistic-looking /var with an oversized log
+  mkdir -p /tmp/sandbox/var/log /tmp/sandbox/var/lib /tmp/sandbox/var/cache
+  dd if=/dev/zero of=/tmp/sandbox/var/log/app.log bs=1M count=80 2>/dev/null
+  echo "small" > /tmp/sandbox/var/lib/state.db
+  echo "small" > /tmp/sandbox/var/cache/pkgcache
+  cd /tmp/sandbox
+success_signal: "Player has run a command that reveals app.log as the largest file"
+success_keywords:
+  - "app.log"
+hints:
+  - "What command sorts directory contents by size?"
+  - "Try `du` with appropriate flags, or `ls -lhS`"
+allowed_destructive: false

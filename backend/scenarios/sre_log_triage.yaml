@@ -1,0 +1,32 @@
+id: sre_log_triage
+level: sre
+title: "5xx error spike — find the smoking gun in the logs"
+narrative: |
+  Error rate on the API tier jumped from 0.1% to 4% at 14:32 UTC. The
+  product team wants an answer in 10 minutes. The application logs are at
+  /var/log/api/app.log. You don't know what error you're looking for yet —
+  start by finding the most frequent error message in the last few minutes
+  of logs and tell the incident channel what's failing.
+objective: "Identify the most frequent error type in the log file using command-line text processing."
+setup_script: |
+  mkdir -p /tmp/sandbox/var/log/api
+  cat > /tmp/sandbox/var/log/api/app.log <<'EOF'
+  2026-05-25T14:30:01Z INFO  request_id=a1 GET /v1/items 200
+  2026-05-25T14:30:05Z INFO  request_id=a2 GET /v1/orders 200
+  2026-05-25T14:32:11Z ERROR request_id=b1 GET /v1/items 503 upstream=payments-svc timeout
+  2026-05-25T14:32:15Z ERROR request_id=b2 GET /v1/items 503 upstream=payments-svc timeout
+  2026-05-25T14:32:19Z ERROR request_id=b3 POST /v1/orders 503 upstream=payments-svc timeout
+  2026-05-25T14:32:22Z INFO  request_id=c1 GET /v1/health 200
+  2026-05-25T14:32:28Z ERROR request_id=b4 GET /v1/items 503 upstream=payments-svc timeout
+  2026-05-25T14:32:31Z ERROR request_id=b5 POST /v1/orders 500 db_pool=exhausted
+  2026-05-25T14:32:35Z ERROR request_id=b6 GET /v1/items 503 upstream=payments-svc timeout
+  2026-05-25T14:32:40Z ERROR request_id=b7 GET /v1/items 503 upstream=payments-svc timeout
+  EOF
+success_signal: "Player has aggregated log lines and identified payments-svc timeout as the dominant error"
+success_keywords:
+  - "payments-svc"
+  - "timeout"
+hints:
+  - "What's the classic three-command pipeline for 'find the most frequent thing in a log'?"
+  - "grep, then a way to count uniques, then sort."
+allowed_destructive: false

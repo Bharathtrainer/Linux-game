@@ -1,0 +1,23 @@
+id: engineer_permissions
+level: engineer
+title: "Deployment script can't read its own config"
+narrative: |
+  A scheduled job running as user `appsvc` is failing with
+  "Permission denied" when it tries to read /etc/app/conf.d/prod.yaml.
+  The file exists. The user exists. The job worked yesterday. The previous
+  on-call left a note: "fixed something at 3am, didn't write it down."
+  Find out why appsvc can't read the config.
+objective: "Diagnose why user 'appsvc' cannot read /etc/app/conf.d/prod.yaml and identify what's wrong with the permissions."
+setup_script: |
+  mkdir -p /tmp/sandbox/etc/app/conf.d
+  echo "database: prod-db-01" > /tmp/sandbox/etc/app/conf.d/prod.yaml
+  chmod 600 /tmp/sandbox/etc/app/conf.d/prod.yaml
+  chmod 700 /tmp/sandbox/etc/app/conf.d
+  echo "appsvc:x:1001:1001::/home/appsvc:/bin/bash" >> /tmp/sandbox/etc/passwd_fragment 2>/dev/null
+success_signal: "Player has inspected ownership or mode of the file and identified the restrictive permission"
+success_keywords:
+  - "prod.yaml"
+hints:
+  - "What command shows ownership and mode bits together?"
+  - "Look at both the file's permissions AND every directory in the path leading to it."
+allowed_destructive: false

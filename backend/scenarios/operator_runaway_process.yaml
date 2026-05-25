@@ -1,0 +1,20 @@
+id: operator_runaway_process
+level: operator
+title: "CPU at 100% — what's hogging it?"
+narrative: |
+  Monitoring is showing one of the application servers pegged at 100% CPU for
+  the last 15 minutes. SSH is sluggish. Nothing was deployed today. Find the
+  process that's burning the CPU and report back its name and PID before
+  anyone restarts anything.
+objective: "Identify the top CPU-consuming process by name and PID."
+setup_script: |
+  # Simulate a busy background process
+  (yes > /dev/null &) 2>/dev/null
+  sleep 0.5
+success_signal: "Player has run a command that shows process CPU usage (ps, top, pidstat)"
+success_keywords:
+  - "yes"
+hints:
+  - "What does `ps` show, and what sort order helps you find the noisy process?"
+  - "Investigate before you kill anything — the on-call team needs to know which PID."
+allowed_destructive: false
