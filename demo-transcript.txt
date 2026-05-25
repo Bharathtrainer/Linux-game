@@ -1,0 +1,81 @@
+PS C:\Users\nbhar\Downloads\Gamma> cd C:\Users\nbhar\Downloads\Gamma\Linux-game
+PS C:\Users\nbhar\Downloads\Gamma\Linux-game> python play.py
+================================================================
+================ ENTERPRISE LINUX MASTERY GAME =================
+              Local-first. AI-mentored. Sandboxed.              
+================================================================
+
+Levels:
+  1. entry
+  2. operator
+  3. engineer
+  4. sre
+Pick a level number: (Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& c:\Users\nbhar\Downloads\Gamma\openshift-migration-advisor\.venv\Scripts\Activate.ps1)
+Invalid choice. Try again.
+Pick a level number: 1
+
+Starting mission for player1 @ level=entry...
+
+Production server: disk filling fast
+
+An alert just paged you. The
+/var partition on a production app server is
+at 96% and climbing. The
+on-call engineer needs to know what's eating the
+space before the disk
+fills and the application crashes. You have shell
+access. No need to
+delete anything yet — first, find the offender.
+
+
+Objective: Identify
+which directory or file is consuming the most space under /var.
+
+Commands: type a shell command, or one of:
+  /hint    — ask the mentor for a Socratic hint
+  /done    — submit your attempts for grading
+  /quit    — give up and exit
+
+[entry] $ ls -la /tmp/sandbox/var
+total 20
+drwxr-xr-x 5 sandbox sandbox 4096 May 25 08:27 .
+drwxr-xr-x 3 sandbox sandbox 4096 May 25 08:27 ..
+drwxr-xr-x 2 sandbox sandbox 4096 May 25 08:27 cache
+drwxr-xr-x 2 sandbox sandbox 4096 May 25 08:27 lib
+drwxr-xr-x 2 sandbox sandbox 4096 May 25 08:27 log
+[exit 0]
+
+[entry] $ du -sh /tmp/sandbox/var/*
+8.0K    /tmp/sandbox/var/cache
+8.0K    /tmp/sandbox/var/lib
+81M     /tmp/sandbox/var/log
+[exit 0]
+
+[entry] $ du -h /tmp/sandbox/var/log/app.log
+80M     /tmp/sandbox/var/log/app.log
+[exit 0]
+
+[entry] $ /done
+
+Grading...
+
+================================================================
+============================ RESULT ============================
+================================================================
+  Verdict:     You're getting close, but still need to find the largest file in /var/log.
+  Solved:      False
+  Score:       62/100
+  Correctness: 6/10
+  Safety:      9/10
+  Efficiency:  8/10
+
+  Coaching:
+    Good use of du -sh to get an overview of space usage.
+    However, you didn't need to run a separate command for
+    app.log. Try combining these steps next time. Also, be
+    cautious with wildcard expansions (e.g., /tmp/sandbox/var/*)
+    as they can lead to unexpected results.
+
+  Missed concepts: wildcard expansion, command chaining
+================================================================
+PS C:\Users\nbhar\Downloads\Gamma\Linux-game> 
